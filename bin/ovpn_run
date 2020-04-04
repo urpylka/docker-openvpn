@@ -96,5 +96,8 @@ if [ $? = 0 ]; then
     sysctl -w net.ipv6.conf.all.forwarding=1 || echo "Failed to enable IPv6 Forwarding"
 fi
 
+iptables -A FORWARD -i tun0 -o tun0 -j ACCEPT
+iptables -A POSTROUTING -o tun0 -t nat -j MASQUERADE
+
 echo "Running 'openvpn ${ARGS[@]} ${USER_ARGS[@]}'"
 exec openvpn ${ARGS[@]} ${USER_ARGS[@]}
